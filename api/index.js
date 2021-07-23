@@ -43,10 +43,10 @@ bot.on('message', (msg) => {
         ).then((jres1)=>{
             console.log(jres1);
             
-            cls_model.classify([parseFloat(s[0]), parseFloat(s[1]), parseFloat(s[2]), parseFloat(s[3]), parseFloat(jres1[0]), parseFloat(jres1[1]), parseFloat(jres1[2])]), parseFloat(jres1[3]), parseFloat(jres1[4]), parseFloat(jres1[5]) ]).then((jres2)=>{
+            cls_model.classify([parseFloat(s[0]), parseFloat(s[1]), parseFloat(s[2]), parseFloat(s[3]), parseFloat(jres1[0]), parseFloat(jres1[1]), parseFloat(jres1[2]), parseFloat(jres1[3]), parseFloat(jres1[4]), parseFloat(jres1[5]) ]).then((jres2)=>{
                 bot.sendMessage(
-                        msg.chat.id,
-                        `nilai y1 yang diprediksi adalah ${jres1[0]}`
+                    msg.chat.id,
+                    `nilai y1 yang diprediksi adalah ${jres1[0]}`
                 ); 
                 bot.sendMessage(
                     msg.chat.id,
