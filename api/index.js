@@ -7,7 +7,7 @@ const cls_model = require('./sdk/cls_model.js'); // cls
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
-const token = '1781217246:AAFHYFBOPzB5DGgqgPVXUotACNdQxRWQ_5I'
+const token = '1928251630:AAHgX5MoSBZ3F0PACZyNucztqP2PT_eGUNA'
 const bot = new TelegramBot(token, {polling: true});
 
 state = 0;
@@ -25,7 +25,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/predict/, (msg) => { 
     bot.sendMessage(
         msg.chat.id,
-        `masukan nilai i|v contohnya 9|9`
+        `masukan nilai x1|x2|x3|x4 contohnya 9|9|9|9`
     );   
     state = 1;
 });
@@ -36,24 +36,38 @@ bot.on('message', (msg) => {
         model.predict(
             [
                 parseFloat(s[0]), // string to float
-                parseFloat(s[1])
+                parseFloat(s[1]),
+                parseFloat(s[2]),
+                parseFloat(s[3])
             ]
         ).then((jres1)=>{
             console.log(jres1);
             
-            cls_model.classify([parseFloat(s[0]), parseFloat(s[1]), parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
+            cls_model.classify([parseFloat(s[0]), parseFloat(s[1]), parseFloat(s[2]), parseFloat(s[3]), parseFloat(jres1[0]), parseFloat(jres1[1]), parseFloat(jres1[2])]), parseFloat(jres1[3]), parseFloat(jres1[4]), parseFloat(jres1[5]) ]).then((jres2)=>{
                 bot.sendMessage(
                         msg.chat.id,
-                        `nilai v yang diprediksi adalah ${jres1[0]} volt`
+                        `nilai y1 yang diprediksi adalah ${jres1[0]}`
                 ); 
                 bot.sendMessage(
                     msg.chat.id,
-                    `nilai p yang diprediksi adalah ${jres1[1]} watt`
+                    `nilai y2 yang diprediksi adalah ${jres1[1]}`
                 ); 
                 bot.sendMessage(
-                        msg.chat.id,
-                        `Klasifikasi Tegangan ${jres2}`
-                );
+                    msg.chat.id,
+                    `nilai y3 yang diprediksi adalah ${jres1[2]}`
+                ); 
+                bot.sendMessage(
+                    msg.chat.id,
+                    `nilai y4 yang diprediksi adalah ${jres1[3]}`
+                ); 
+                bot.sendMessage(
+                    msg.chat.id,
+                    `nilai y5 yang diprediksi adalah ${jres1[4]}`
+                ); 
+                bot.sendMessage(
+                    msg.chat.id,
+                    `nilai y6 yang diprediksi adalah ${jres1[5]}`
+                ); 
                 state = 0;
             })
         })
@@ -67,11 +81,13 @@ bot.on('message', (msg) => {
 })
 
 // routers
-r.get('/predict/:i/:r', function(req, res, next) {    
+r.get('/predict/:x1/:x2/:x3/:x4', function(req, res, next) {    
     model.predict(
         [
-            parseFloat(req.params.i), // string to float
-            parseFloat(req.params.r)
+            parseFloat(req.params.x1), // string to float
+            parseFloat(req.params.x2),
+            parseFloat(req.params.x3),
+            parseFloat(req.params.x4)
         ]
     ).then((jres)=>{
         res.json(jres);
@@ -79,19 +95,27 @@ r.get('/predict/:i/:r', function(req, res, next) {
 });
 
 // routers
-r.get('/classify/:i/:r', function(req, res, next) {    
+r.get('/classify/:x1/:x2/:x3/:x4', function(req, res, next) {    
     model.predict(
         [
-            parseFloat(req.params.i), // string to float
-            parseFloat(req.params.r)
+            parseFloat(req.params.x1), // string to float
+            parseFloat(req.params.x2),
+            parseFloat(req.params.x3),
+            parseFloat(req.params.x4)
         ]
     ).then((jres)=>{
         cls_model.classify(
             [
-                parseFloat(req.params.i), // string to float
-                parseFloat(req.params.r),
+                parseFloat(req.params.x1), // string to float
+                parseFloat(req.params.x2),
+                parseFloat(req.params.x3),
+                parseFloat(req.params.x4),
                 parseFloat(jres[0]),
-                parseFloat(jres[1])
+                parseFloat(jres[1]),
+                parseFloat(jres[2]),
+                parseFloat(jres[3]),
+                parseFloat(jres[4]),
+                parseFloat(jres[5])
             ]
         ).then((jres_)=>{
             res.json({jres, jres_})
